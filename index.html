@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知脉 · 看清每个知识的来龙去脉</title>
+  <meta name="description" content="知脉：基于 K12-KGraph 的教材知识库，把隐性的学习顺序显性化——看清每个知识从哪来、到哪去。">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script>
+    /* 渲染前恢复主题，避免护眼→深色闪烁 */
+    try{ if(localStorage.getItem("zhimai-theme")==="eye") document.documentElement.dataset.theme="eye"; }catch(e){}
+  </script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="wordmark" href="#/">知脉</a>
+    <div class="search" id="search">
+      <input type="search" id="search-input" placeholder="搜索概念，如：两角差的余弦公式" autocomplete="off" spellcheck="false">
+      <div class="search-results" id="search-results" hidden></div>
+    </div>
+    <div class="theme-toggle" id="theme-toggle" data-active="dark" role="group" aria-label="主题切换">
+      <button type="button" class="tt-opt is-active" data-theme-set="dark">深色</button>
+      <button type="button" class="tt-opt" data-theme-set="eye">护眼</button>
+      <span class="tt-thumb" aria-hidden="true"></span>
+    </div>
+    <div id="view-picker"></div>
+  </header>
+
+  <main id="app"></main>
+
+  <footer class="foot">
+    本站仅供学习参考，知识链为课程建议而非绝对标准。WxAiWay.CoM
+  </footer>
+
+  <script defer src="vendor/katex/katex.min.js"></script>
+  <script defer src="vendor/katex/contrib/auto-render.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
