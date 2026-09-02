@@ -2,6 +2,7 @@
 
 import { initSearch } from "./search.js";
 import { initTheme } from "./theme.js";
+import { initNav } from "./nav.js";
 import { initPerspective } from "./perspective.js";
 import { renderConcept } from "./views/concept.js";
 import { bindHomeViewRefresh, renderHome } from "./views/home.js";
@@ -29,6 +30,7 @@ function route() {
 window.addEventListener("hashchange", route);
 initSearch();
 initTheme();
+initNav(document.getElementById("nav-wrap"));
 initPerspective(document.getElementById("view-picker"));
 bindHomeViewRefresh(route);
 route();
