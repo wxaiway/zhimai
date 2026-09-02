@@ -49,10 +49,29 @@ export function renderChain(container, concept) {
   const deps = concept.dependents || [];
   const view = getView();
 
-  // 降级：无前置链。有去向仍画"当前 → 去向"（起点概念）；真正独立才一行带过。
+  // 降级：无前置链。有去向仍画"当前 → 去向"（起点概念）；
+  // 无去向但有策展的所属(is_a)/相关(related)时，用它们撑起脉络；真正独立才一行带过。
   if (!concept.has_chain) {
     if (!deps.length) {
-      container.innerHTML = `<p class="chain-hint">独立知识点：图谱未标注前置关系，可直接学习。</p>`;
+      const isa = concept.is_a || [];
+      const related = concept.related || [];
+      if (!isa.length && !related.length) {
+        container.innerHTML = `<p class="chain-hint">独立知识点：图谱未标注前置关系，可直接学习。</p>`;
+        return;
+      }
+      const rail = document.createElement("div");
+      rail.className = "chain";
+      let order = 0;
+      isa.forEach((n) => rail.appendChild(node(n, "所属", false, order++, view)));
+      rail.appendChild(node(concept, isa.length ? "当前" : "起点", true, order++, view));
+      related.forEach((n) => rail.appendChild(node(n, "相关", false, order++, view)));
+      container.appendChild(rail);
+      const hint = document.createElement("p");
+      hint.className = "chain-hint";
+      hint.textContent = "图谱未标注前置顺序，暂按所属 / 相关概念呈现脉络。";
+      container.appendChild(hint);
+      viewNote(container, view);
+      bindTooltips(rail);
       return;
     }
     const rail = document.createElement("div");

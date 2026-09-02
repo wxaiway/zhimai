@@ -27,6 +27,9 @@ export async function renderConcept(app, id) {
   const examples = Array.isArray(c.examples) ? c.examples : [];
   const hasPractice = c.afterclass.length || c.exercises.length;
   const myMastery = getMastery(c.id);
+  // 无前置链且无去向时，知识链会退而展示 所属(is_a)/相关(related)；
+  // 此时下方独立的"属于/相关"块与链路重复，予以隐藏。
+  const relsInChain = !c.has_chain && !(c.dependents || []).length && ((c.is_a || []).length || c.related.length);
 
   app.innerHTML = `
     <article class="concept">
@@ -85,12 +88,12 @@ export async function renderConcept(app, id) {
         <p class="no-practice">这个概念暂无内置例题。<button type="button" class="linkish" id="ask-ai">让 AI 为你出题 →</button></p>
       </section>`}
 
-      ${c.is_a && c.is_a.length ? `<section class="block reveal">
+      ${c.is_a && c.is_a.length && !relsInChain ? `<section class="block reveal">
         <h2 class="block-title"><span class="tick"></span>属于</h2>
         <div class="chips">${c.is_a.map((r) => `<a class="chip sc-${stageClass(r.stage)}" href="#/concept/${r.id}">${escapeHtml(r.name)}</a>`).join("")}</div>
       </section>` : ""}
 
-      ${c.related.length ? `<section class="block reveal">
+      ${c.related.length && !relsInChain ? `<section class="block reveal">
         <h2 class="block-title"><span class="tick"></span>相关</h2>
         <div class="chips">${c.related.map((r) => `<a class="chip sc-${stageClass(r.stage)}" href="#/concept/${r.id}">${escapeHtml(r.name)}</a>`).join("")}</div>
       </section>` : ""}
